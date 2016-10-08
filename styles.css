@@ -5,12 +5,12 @@ body {
     font-size: 16px;
     align-content: center;
 }
-.animal_list {
+.list {
     font-size: 14px;
     border-left: 5px;
 }
 
-.animal_row {
+.row {
     font-size: 13px;
     padding-left: 10px;
     border-style: solid;
