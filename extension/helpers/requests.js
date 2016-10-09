@@ -22,12 +22,21 @@ var requests = {
           name = animal.Taxon;
       }
       $.get( "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + animal.Taxon.replace(' ', '%20') + "&limit=1&namespace=0&format=json",
-      function(data, status) {
+        function(data, status) {
           console.log(data);
           callback(i, data, animal);
       });
-  }
+  },
 
-
-
+  getImageForAnimal(i, animal){
+      $.ajax({
+         url: "https://api.gettyimages.com/v3/search/images?fields=id,title,thumb,referral_destinations&sort_order=best&phrase=" + animal.Taxon.replace(' ', '%20'),
+         type: "GET",
+         beforeSend: function(xhr){xhr.setRequestHeader('Api-Key', 'jp6fpd62452tf3cd44z46qax');},
+         success: function(data) {
+             var image = mappers.getImageFromResultImages(data);
+             UI.onImageReceived(i, image);
+          }
+      });
+  },
 };

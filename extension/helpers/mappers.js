@@ -26,6 +26,15 @@ var mappers = {
                 }
             }
         });
-
+    },
+    getImageFromResultImages: function(data){
+        for(var img in data.images){
+            var obj = data.images[img];
+            for(var k in obj.display_sizes){
+                var pic = obj.display_sizes[k];
+                return pic.uri;
+            }
+        }
+        return "";
     }
 };
