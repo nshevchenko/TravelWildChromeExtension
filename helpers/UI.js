@@ -13,7 +13,7 @@ var UI = {
                        "</div>";
   },
 
- 
+
   createCityInfoList: function(value) {
       var container = $("#city_list");
       for (var i = 0; i < value; i++) {

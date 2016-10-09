@@ -11,28 +11,32 @@ function queryGetCurrentWebsiteName(){
 }
 
 function onReadWebsite(websiteName){
-  console.log(websiteName);
   var classId = mappers.mapWebsiteNameToClassId(websiteName);
-  console.log(classId);
   if(classId != null) {
       requests.getClassIdValue(classId, onClassIdFound);
+  } else {
+      console.log("classID is null");
   }
 }
 
 function onClassIdFound(msg) {
     msg = msg || {};
     console.log('onResponse', msg.response);
-
     helloFilip(msg.response);
 }
 
 function helloFilip(value) {
-    UI.populateAnimalList(4);
-    UI.createCityInfoList(2);
+    var response = requests.getCountryInfo("NO", onCountryInfoReceived);
 }
 
-function identifyClientBrowser(){
-  _clientBrowser = navigator ? navigator.userAgent.toLowerCase() : "other";
+function onCountryInfoReceived(data){
+    console.log("data " + data);
+    var responseObj = JSON.parse(data);
+    for(var animalObj in responseObj){
+        console.log(responseObj[animalObj].Quantity);
+    }
+    UI.populateAnimalList(4);
+    UI.createCityInfoList(2);
 }
 
 // start of the program
