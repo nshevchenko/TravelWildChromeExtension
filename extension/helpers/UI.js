@@ -15,8 +15,13 @@ var UI = {
         var animalCell = createAnimalRow(i, animalObj);
         container.append(animalCell);
         if(animalObj.link != '' && typeof animalObj.link != 'undefined'&& animalObj.link != null){
-            console.log("add listener anyway shit");
             addOnClickListeners();
+        } else {
+            disableWikipediaLogo();
+        }
+
+        function disableWikipediaLogo(){
+            $('#wikipedia_logo' + i).hide();
         }
 
         function addOnClickListeners(){
@@ -46,8 +51,9 @@ var UI = {
             return "<div class='row' id='animal_row" + i + "'><a id='link_url'>" +
                     "<div class='title_small' id='title_animal'><b>" + name + "</b></div>" +
                     "<div class='quantity_text'> Quantity: " + Math.round(animalObj.Quantity) + "</div>" +
-                    "<div class='used_line'><div class ='row_subtitle'>Used for: " + use.toString() + "</div></div>" +
+                    "<div class='used_line'><div class ='row_subtitle'>Used for: " + use.toString() + "</div></div></br>" +
                     "<div class='used_line'><div class ='row_subtitle'>Purpose: " + purpose.toString() + "/<div></div>" +
+                    "<img class='wikipedia_logo' id='wikipedia_logo" + i + "' src='../images/wikilogo.png'>" +
                 "</a></div>";
         }
     }
