@@ -10,16 +10,8 @@ var requests = {
   getCountryInfo: function(country, callback) {
       $.get( "http://45.55.212.203/country_data?country=" + "NO" + "",
       function(data, status) {
-          console.log(status);
-          console.log(data);
           callback(data);
       });
-      /*
-      .done(function( data ) {
-        alert( "Data Loaded: " + data );
-        callback(data);
-      });
-      */
   }
 
 
