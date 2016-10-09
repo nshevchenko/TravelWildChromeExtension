@@ -39,6 +39,7 @@ function onCountryInfoReceived(data){
     // UI.createCityInfoList(2);
 }
 
+
 // start of the program
 $(document).ready(function () {
     begin();
