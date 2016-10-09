@@ -1,6 +1,8 @@
 import cherrypy
 import json
+import requests
 import pandas as pd
+
 from pathlib import Path
 
 ROOT_DIR = Path('./Importer')
@@ -19,21 +21,60 @@ PURPOSE_CODES = {
     'Z' : 'Zoo'
 }
 
+SOURCE_CODES = {
+    'C' : 'Captive-bred animals',
+    'F' : 'Born in captivity',
+    'I' : 'Confiscations/Seizures',
+    'R' : 'Ranched',
+    'W' : 'Wild',
+}
+
+def get_vernacular(taxon):
+    root = 'http://api.gbif.org/v1/species/search'
+    args = {'q': taxon, 'limit':5}
+
+    res = requests.get(root, params=args)
+    data = json.loads(res.text)
+    vernacular = ''
+ 
+    items = data['results']
+
+    for item in items:
+        vkey = 'vernacularNames'
+
+        if vkey in item.keys():
+
+            for vname in item[vkey]:
+
+               if vname['language'] in ['', 'eng']:
+                    return vname['vernacularName']
+ 
+    return vernacular
+
 def conv_frame(frame):
+
+    taxon = frame.Taxon.iloc[0]
+
     return {
-        'Name' : 'TBA',
-        'Taxon' : list(frame.Taxon.unique()),
+        'Taxon' : taxon,
         'Quantity' : frame['Importer reported quantity'].sum(),
         'Terms' : list(frame.Term.unique()),
-        'Purpose' : list(map(lambda p: PURPOSE_CODES[p], frame.Purpose.unique()))
+        'Purpose' : list(map(lambda p: PURPOSE_CODES[p], frame.Purpose.unique())),
+        'Source' :  list(map(lambda p: SOURCE_CODES[p], frame.Source.unique())),
     }
 
 def process_data(topten):
-    return list(map(lambda group: conv_frame(topten.get_group(group)), topten.groups))
+    info = list(map(lambda group: conv_frame(topten.get_group(group)), topten.groups))
+    topfive = sorted(info, key=lambda i: i['Quantity'])[5:]
+
+    for item in topfive:
+        item['Name'] = get_vernacular(item['Taxon'])
+
+    return topfive
 
 def _get_imported(country):
     topten = pd.read_hdf(str(ROOT_DIR / (country +'.h5')), country)
-    taxgroups = topten.groupby('Taxon')
+    taxgroups = topten.groupby('Taxon').head(5).groupby('Taxon')
     res_data = process_data(taxgroups)
     return res_data
 
@@ -56,5 +97,5 @@ class TravelLifeAPI(object):
 
 
 cherrypy.server.socket_host = '0.0.0.0'
-cherrypy.server.socket_port = 8080
+cherrypy.server.socket_port = 80
 cherrypy.quickstart(TravelLifeAPI(), '/')
