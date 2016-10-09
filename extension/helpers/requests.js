@@ -7,9 +7,10 @@ var requests = {
         });
       });
   },
-  getCountryInfo: function(country, callback) {
-      $.get( "http://45.55.212.203/country_data?country=" + "NO" + "",
+  getCountryInfo: function(countryCode, callback) {
+      $.get( "http://45.55.212.203/country_data?country=" + countryCode + "",
       function(data, status) {
+          console.log(data);
           callback(data);
       });
   }

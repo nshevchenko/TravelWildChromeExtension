@@ -22,21 +22,21 @@ function onReadWebsite(websiteName){
 function onClassIdFound(msg) {
     msg = msg || {};
     console.log('onResponse', msg.response);
-    helloFilip(msg.response);
+    $(".location").html("Save wildlife in " + msg.response);
+    mappers.getCountryFromLocationName(msg.response, sendRequestToServer);
 }
 
-function helloFilip(value) {
-    var response = requests.getCountryInfo("NO", onCountryInfoReceived);
+function sendRequestToServer(countryCode) {
+    console.log("FOUND : " + countryCode);
+    requests.getCountryInfo(countryCode, onCountryInfoReceived);
 }
 
 function onCountryInfoReceived(data){
     console.log("data " + data);
     var responseObj = JSON.parse(data);
-    for(var animalObj in responseObj){
-        console.log(responseObj[animalObj].Quantity);
-    }
-    UI.populateAnimalList(4);
-    UI.createCityInfoList(2);
+    UI.populateAnimalList(responseObj);
+
+    // UI.createCityInfoList(2);
 }
 
 // start of the program
