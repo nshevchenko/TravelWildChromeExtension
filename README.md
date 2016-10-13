@@ -23,6 +23,6 @@ International travelers often unknowingly purchase wildlife items made from enda
 - **DATA SET:** *CITES Trading Database*
 
 ## Contributions
-- Mykola Shevchenko, @nshevchenko
-- Filip Ter, @terfilip
+- Mykola Shevchenko, [@nshevchenko](https://github.com/nshevchenko)
+- Filip Ter, [@terfilip](https://github.com/terfilip)
 
